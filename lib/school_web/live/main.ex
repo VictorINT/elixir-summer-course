@@ -27,7 +27,7 @@ defmodule SchoolWeb.MainLive do
       |> assign(:rule_display_rows, rule_display_rows)
       |> assign(:score, 0)
       |> assign(:combo_multiplier, 1)
-      |> assign(:last_score_delta, 2)
+      |> assign(:last_score_delta, 0)
       |> assign(:player_list, [])
 
     {:ok, new_socket}
