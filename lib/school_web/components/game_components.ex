@@ -3,6 +3,7 @@ defmodule SchoolWeb.GameComponents do
 
   attr :player_name, :string, required: true
   attr :score, :integer, required: true
+  attr :combo_multiplier, :integer, default: 1
 
   def score_banner(assigns) do
     ~H"""
@@ -11,7 +12,10 @@ defmodule SchoolWeb.GameComponents do
         <div class="player-avatar">MK</div>
         <div>
           <div class="player-name">Inspector {@player_name}</div>
-          <div class="player-role">Senior Postal Officer</div>
+          <div class="player-role">
+            Senior Postal Officer
+            <span :if={@combo_multiplier > 1} class="combo-pill">KOMBO x{@combo_multiplier}</span>
+          </div>
         </div>
       </div>
       <div class="score-display">
@@ -38,6 +42,7 @@ defmodule SchoolWeb.GameComponents do
   attr :package, :map, required: true
   attr :timestamp, :integer, required: true
   attr :validation_result, :atom, required: true
+  attr :score_delta, :integer, default: 2
 
   def package_inspection_form(assigns) do
     ~H"""
@@ -47,14 +52,14 @@ defmodule SchoolWeb.GameComponents do
           <div class="stamp-result" id={"card-#{@timestamp}"}>
             <div class="stamp-mark approved">
               <span class="stamp-label">Approved</span>
-              <span class="stamp-points">+1</span>
+              <span class="stamp-points">+{@score_delta}</span>
             </div>
           </div>
         <% :incorrect -> %>
           <div class="stamp-result" id={"card-#{@timestamp}"}>
             <div class="stamp-mark rejected">
               <span class="stamp-label">Rejected</span>
-              <span class="stamp-points">−1</span>
+              <span class="stamp-points">{@score_delta}</span>
             </div>
           </div>
         <% nil -> %>
@@ -167,7 +172,7 @@ defmodule SchoolWeb.GameComponents do
     """
   end
 
-  attr :rule_descriptions, :list, required: true
+  attr :rule_display_rows, :list, required: true
 
   def postal_regulations(assigns) do
     ~H"""
@@ -176,10 +181,13 @@ defmodule SchoolWeb.GameComponents do
         <span class="rules-title">Postal Regulations</span>
       </div>
 
-      <%= for {desc, index} <- Enum.with_index(@rule_descriptions) do %>
+      <%= for {row, index} <- Enum.with_index(@rule_display_rows) do %>
         <div class="rules-list">
-          <div class="rule-item">
-            <span class="rule-number">{index + 1}</span><span>{desc}</span>
+          <div class={["rule-item", row.added? && "rule-item-added", row.paused? && "rule-item-paused"]}>
+            <span class="rule-number">{index + 1}</span>
+            <span>{row.description}</span>
+            <span :if={row.added?} class="rule-effect-timer">added {row.added_seconds_left}s</span>
+            <span :if={row.paused?} class="rule-effect-timer">paused {row.paused_seconds_left}s</span>
           </div>
         </div>
       <% end %>
@@ -206,6 +214,31 @@ defmodule SchoolWeb.GameComponents do
         </li>
       </ul>
     </div>
+    """
+  end
+
+  def points_shop(assigns) do
+    ~H"""
+    <section class="leaderboard">
+      <div class="leaderboard-header">
+        <div class="leaderboard-title">Points Shop</div>
+      </div>
+
+      <ul class="leaderboard-list">
+        <li class="leaderboard-item">
+          <div class="lb-player-info">
+            <div class="lb-player-name">Pause random rule (10s)</div>
+          </div>
+          <button phx-click="pause_random_rule" class="btn btn-decline">-4 pts</button>
+        </li>
+        <li class="leaderboard-item">
+          <div class="lb-player-info">
+            <div class="lb-player-name">Add random rule for all (10s)</div>
+          </div>
+          <button phx-click="add_random_rule" class="btn btn-approve">-2 pts</button>
+        </li>
+      </ul>
+    </section>
     """
   end
 

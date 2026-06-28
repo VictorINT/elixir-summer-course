@@ -12,7 +12,11 @@
   <!-- COLUMN 1: CARD -->
   <%= if @local_player && @game_state == :in_progress do %>
     <section class="inspection-area">
-      <.score_banner player_name={@local_player.name} score={@score} />
+      <.score_banner
+        player_name={@local_player.name}
+        score={@score}
+        combo_multiplier={@combo_multiplier}
+      />
 
       <.match_time_remaining />
 
@@ -20,6 +24,7 @@
         package={@package}
         timestamp={@timestamp}
         validation_result={@validation_result}
+        score_delta={@last_score_delta}
       />
     </section>
   <% else %>
@@ -27,10 +32,13 @@
   <% end %>
   
 <!-- COLUMN 2: RULES -->
-  <.postal_regulations rule_descriptions={@rule_descriptions} />
+  <.postal_regulations rule_display_rows={@rule_display_rows} />
   
 <!-- COLUMN 3: LEADERBOARD -->
   <.leaderboard player_list={@player_list} />
+
+<!-- COLUMN 4: SHOP -->
+  <.points_shop />
 </main>
 
 <.match_end_overlay :if={@game_state == :ended} player_list={@player_list} />

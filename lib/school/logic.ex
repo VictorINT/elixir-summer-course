@@ -68,6 +68,11 @@ defmodule School.Logic do
     end)
   end
 
+  @spec description_by_rule(rule()) :: String.t()
+  def description_by_rule(rule) do
+    Map.get(@desc_rules, rule, "Unknown rule")
+  end
+
   defp validate_rule1(%{type: :letter, weight: weight}) do
     if weight < 500 do
       {:valid, "rule1"}
