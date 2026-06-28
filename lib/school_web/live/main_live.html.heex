@@ -31,14 +31,18 @@
     <.ready_section local_player={@local_player} />
   <% end %>
   
-<!-- COLUMN 2: RULES -->
-  <.postal_regulations rule_display_rows={@rule_display_rows} />
+  <!-- COLUMN 2: RULES -->
+  <%= if @game_state == :in_progress do %>
+    <.postal_regulations rule_display_rows={@rule_display_rows} />
+  <% end %>
   
-<!-- COLUMN 3: LEADERBOARD -->
+  <!-- COLUMN 3: LEADERBOARD -->
   <.leaderboard player_list={@player_list} />
 
-<!-- COLUMN 4: SHOP -->
-  <.points_shop />
+  <!-- COLUMN 4: SHOP -->
+  <%= if @game_state == :in_progress do %>
+    <.points_shop />
+  <% end %>
 </main>
 
 <.match_end_overlay :if={@game_state == :ended} player_list={@player_list} />
