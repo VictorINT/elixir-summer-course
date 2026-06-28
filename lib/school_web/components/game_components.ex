@@ -229,13 +229,13 @@ defmodule SchoolWeb.GameComponents do
           <div class="lb-player-info">
             <div class="lb-player-name">Pause random rule (10s)</div>
           </div>
-          <button phx-click="pause_random_rule" class="btn btn-decline">-4 pts</button>
+          <button phx-click="pause_random_rule" class="btn btn-approve">-4 pts</button>
         </li>
         <li class="leaderboard-item">
           <div class="lb-player-info">
             <div class="lb-player-name">Add random rule for all (10s)</div>
           </div>
-          <button phx-click="add_random_rule" class="btn btn-approve">-2 pts</button>
+          <button phx-click="add_random_rule" class="btn btn-decline">-2 pts</button>
         </li>
       </ul>
     </section>
